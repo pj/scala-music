@@ -4,44 +4,38 @@ import org.scalatest.Matchers
 import java.io.File
 import org.scalatest.Ignore
 
-@Ignore
+//@Ignore
 class Generator extends FlatSpec with Matchers {
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
     val p = new java.io.PrintWriter(f)
     try { op(p) } finally { p.close() }
   }
-
-//  val semimap = Map(1 -> Seq("An"), 2 -> Seq("As")
   
   "Thing" should "generate stuff" in {
+    def getMidiNote(octave: Int, note: Char): Int = {
+      // A0 is 21
+      val noteIndex = note match {
+        case 'A' => 9
+        case 'B' => 11
+        case 'C' => 0
+        case 'D' => 2
+        case 'E' => 4
+        case 'F' => 5
+        case 'G' => 7
+      }
+      12 + (octave * 12) + noteIndex
+    }
+    
     printToFile(new File("/Users/pauljohnson/Programming/scala-music/src/main/scala/nz/kiwi/johnson/scalam/Notes.scala")) {
      pw =>
       pw.println("package nz.kiwi.johnson.scalam")
-//      pw.println("sealed trait Note")
-//      pw.println("sealed trait Chord")
-//      pw.println("sealed trait Chord")
       pw.println("")
-      pw.println("package object Notes {")
       (0 until 9) foreach { octave =>
-          ('A' to 'G') foreach { note => 
-              Seq('f', 'n', 's') foreach { accidental => 
-                pw.println(s"""case class $note$accidental$octave() extends Note { val octave = ${octave} ; val note = "${note}"; val accidental = "${accidental}" }""")
-//                  Seq('W', 'H', 'Q', 'E', 'S') foreach { length =>  
-                  // note
-//                  pw.println(s"""case class ${note}${accidental}${length}${octave} extends Note { val octave = ${octave} ; val note = "${note}"; val length = "${length}"; val accidental = "${accidental}" }""")
-                  
-                  
-                  // chords
-//                  Seq("", "min", "7", "min7", "maj7") foreach { chord =>
-//                    
-//                  }
-//                }
-            }
+          ('C' to 'G').toSeq ++ ('A' to 'B').toSeq foreach { note => 
+            val midiNote = getMidiNote(octave, note)
+            pw.println(s"""object $note$octave extends Note(${octave}, ${midiNote}, UnknownLength)""")
         }
       }
-      
-      pw.println("}")
-//      }
     }
   }
 }

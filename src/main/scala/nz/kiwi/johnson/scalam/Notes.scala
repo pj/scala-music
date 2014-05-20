@@ -1,193 +1,65 @@
 package nz.kiwi.johnson.scalam
 
-object Notes {
-case class Af0() extends Note { val octave = 0 ; val note = "A"; val accidental = "f" }
-case class An0() extends Note { val octave = 0 ; val note = "A"; val accidental = "n" }
-case class As0() extends Note { val octave = 0 ; val note = "A"; val accidental = "s" }
-case class Bf0() extends Note { val octave = 0 ; val note = "B"; val accidental = "f" }
-case class Bn0() extends Note { val octave = 0 ; val note = "B"; val accidental = "n" }
-case class Bs0() extends Note { val octave = 0 ; val note = "B"; val accidental = "s" }
-case class Cf0() extends Note { val octave = 0 ; val note = "C"; val accidental = "f" }
-case class Cn0() extends Note { val octave = 0 ; val note = "C"; val accidental = "n" }
-case class Cs0() extends Note { val octave = 0 ; val note = "C"; val accidental = "s" }
-case class Df0() extends Note { val octave = 0 ; val note = "D"; val accidental = "f" }
-case class Dn0() extends Note { val octave = 0 ; val note = "D"; val accidental = "n" }
-case class Ds0() extends Note { val octave = 0 ; val note = "D"; val accidental = "s" }
-case class Ef0() extends Note { val octave = 0 ; val note = "E"; val accidental = "f" }
-case class En0() extends Note { val octave = 0 ; val note = "E"; val accidental = "n" }
-case class Es0() extends Note { val octave = 0 ; val note = "E"; val accidental = "s" }
-case class Ff0() extends Note { val octave = 0 ; val note = "F"; val accidental = "f" }
-case class Fn0() extends Note { val octave = 0 ; val note = "F"; val accidental = "n" }
-case class Fs0() extends Note { val octave = 0 ; val note = "F"; val accidental = "s" }
-case class Gf0() extends Note { val octave = 0 ; val note = "G"; val accidental = "f" }
-case class Gn0() extends Note { val octave = 0 ; val note = "G"; val accidental = "n" }
-case class Gs0() extends Note { val octave = 0 ; val note = "G"; val accidental = "s" }
-case class Af1() extends Note { val octave = 1 ; val note = "A"; val accidental = "f" }
-case class An1() extends Note { val octave = 1 ; val note = "A"; val accidental = "n" }
-case class As1() extends Note { val octave = 1 ; val note = "A"; val accidental = "s" }
-case class Bf1() extends Note { val octave = 1 ; val note = "B"; val accidental = "f" }
-case class Bn1() extends Note { val octave = 1 ; val note = "B"; val accidental = "n" }
-case class Bs1() extends Note { val octave = 1 ; val note = "B"; val accidental = "s" }
-case class Cf1() extends Note { val octave = 1 ; val note = "C"; val accidental = "f" }
-case class Cn1() extends Note { val octave = 1 ; val note = "C"; val accidental = "n" }
-case class Cs1() extends Note { val octave = 1 ; val note = "C"; val accidental = "s" }
-case class Df1() extends Note { val octave = 1 ; val note = "D"; val accidental = "f" }
-case class Dn1() extends Note { val octave = 1 ; val note = "D"; val accidental = "n" }
-case class Ds1() extends Note { val octave = 1 ; val note = "D"; val accidental = "s" }
-case class Ef1() extends Note { val octave = 1 ; val note = "E"; val accidental = "f" }
-case class En1() extends Note { val octave = 1 ; val note = "E"; val accidental = "n" }
-case class Es1() extends Note { val octave = 1 ; val note = "E"; val accidental = "s" }
-case class Ff1() extends Note { val octave = 1 ; val note = "F"; val accidental = "f" }
-case class Fn1() extends Note { val octave = 1 ; val note = "F"; val accidental = "n" }
-case class Fs1() extends Note { val octave = 1 ; val note = "F"; val accidental = "s" }
-case class Gf1() extends Note { val octave = 1 ; val note = "G"; val accidental = "f" }
-case class Gn1() extends Note { val octave = 1 ; val note = "G"; val accidental = "n" }
-case class Gs1() extends Note { val octave = 1 ; val note = "G"; val accidental = "s" }
-case class Af2() extends Note { val octave = 2 ; val note = "A"; val accidental = "f" }
-case class An2() extends Note { val octave = 2 ; val note = "A"; val accidental = "n" }
-case class As2() extends Note { val octave = 2 ; val note = "A"; val accidental = "s" }
-case class Bf2() extends Note { val octave = 2 ; val note = "B"; val accidental = "f" }
-case class Bn2() extends Note { val octave = 2 ; val note = "B"; val accidental = "n" }
-case class Bs2() extends Note { val octave = 2 ; val note = "B"; val accidental = "s" }
-case class Cf2() extends Note { val octave = 2 ; val note = "C"; val accidental = "f" }
-case class Cn2() extends Note { val octave = 2 ; val note = "C"; val accidental = "n" }
-case class Cs2() extends Note { val octave = 2 ; val note = "C"; val accidental = "s" }
-case class Df2() extends Note { val octave = 2 ; val note = "D"; val accidental = "f" }
-case class Dn2() extends Note { val octave = 2 ; val note = "D"; val accidental = "n" }
-case class Ds2() extends Note { val octave = 2 ; val note = "D"; val accidental = "s" }
-case class Ef2() extends Note { val octave = 2 ; val note = "E"; val accidental = "f" }
-case class En2() extends Note { val octave = 2 ; val note = "E"; val accidental = "n" }
-case class Es2() extends Note { val octave = 2 ; val note = "E"; val accidental = "s" }
-case class Ff2() extends Note { val octave = 2 ; val note = "F"; val accidental = "f" }
-case class Fn2() extends Note { val octave = 2 ; val note = "F"; val accidental = "n" }
-case class Fs2() extends Note { val octave = 2 ; val note = "F"; val accidental = "s" }
-case class Gf2() extends Note { val octave = 2 ; val note = "G"; val accidental = "f" }
-case class Gn2() extends Note { val octave = 2 ; val note = "G"; val accidental = "n" }
-case class Gs2() extends Note { val octave = 2 ; val note = "G"; val accidental = "s" }
-case class Af3() extends Note { val octave = 3 ; val note = "A"; val accidental = "f" }
-case class An3() extends Note { val octave = 3 ; val note = "A"; val accidental = "n" }
-case class As3() extends Note { val octave = 3 ; val note = "A"; val accidental = "s" }
-case class Bf3() extends Note { val octave = 3 ; val note = "B"; val accidental = "f" }
-case class Bn3() extends Note { val octave = 3 ; val note = "B"; val accidental = "n" }
-case class Bs3() extends Note { val octave = 3 ; val note = "B"; val accidental = "s" }
-case class Cf3() extends Note { val octave = 3 ; val note = "C"; val accidental = "f" }
-case class Cn3() extends Note { val octave = 3 ; val note = "C"; val accidental = "n" }
-case class Cs3() extends Note { val octave = 3 ; val note = "C"; val accidental = "s" }
-case class Df3() extends Note { val octave = 3 ; val note = "D"; val accidental = "f" }
-case class Dn3() extends Note { val octave = 3 ; val note = "D"; val accidental = "n" }
-case class Ds3() extends Note { val octave = 3 ; val note = "D"; val accidental = "s" }
-case class Ef3() extends Note { val octave = 3 ; val note = "E"; val accidental = "f" }
-case class En3() extends Note { val octave = 3 ; val note = "E"; val accidental = "n" }
-case class Es3() extends Note { val octave = 3 ; val note = "E"; val accidental = "s" }
-case class Ff3() extends Note { val octave = 3 ; val note = "F"; val accidental = "f" }
-case class Fn3() extends Note { val octave = 3 ; val note = "F"; val accidental = "n" }
-case class Fs3() extends Note { val octave = 3 ; val note = "F"; val accidental = "s" }
-case class Gf3() extends Note { val octave = 3 ; val note = "G"; val accidental = "f" }
-case class Gn3() extends Note { val octave = 3 ; val note = "G"; val accidental = "n" }
-case class Gs3() extends Note { val octave = 3 ; val note = "G"; val accidental = "s" }
-case class Af4() extends Note { val octave = 4 ; val note = "A"; val accidental = "f" }
-case class An4() extends Note { val octave = 4 ; val note = "A"; val accidental = "n" }
-case class As4() extends Note { val octave = 4 ; val note = "A"; val accidental = "s" }
-case class Bf4() extends Note { val octave = 4 ; val note = "B"; val accidental = "f" }
-case class Bn4() extends Note { val octave = 4 ; val note = "B"; val accidental = "n" }
-case class Bs4() extends Note { val octave = 4 ; val note = "B"; val accidental = "s" }
-case class Cf4() extends Note { val octave = 4 ; val note = "C"; val accidental = "f" }
-case class Cn4() extends Note { val octave = 4 ; val note = "C"; val accidental = "n" }
-case class Cs4() extends Note { val octave = 4 ; val note = "C"; val accidental = "s" }
-case class Df4() extends Note { val octave = 4 ; val note = "D"; val accidental = "f" }
-case class Dn4() extends Note { val octave = 4 ; val note = "D"; val accidental = "n" }
-case class Ds4() extends Note { val octave = 4 ; val note = "D"; val accidental = "s" }
-case class Ef4() extends Note { val octave = 4 ; val note = "E"; val accidental = "f" }
-case class En4() extends Note { val octave = 4 ; val note = "E"; val accidental = "n" }
-case class Es4() extends Note { val octave = 4 ; val note = "E"; val accidental = "s" }
-case class Ff4() extends Note { val octave = 4 ; val note = "F"; val accidental = "f" }
-case class Fn4() extends Note { val octave = 4 ; val note = "F"; val accidental = "n" }
-case class Fs4() extends Note { val octave = 4 ; val note = "F"; val accidental = "s" }
-case class Gf4() extends Note { val octave = 4 ; val note = "G"; val accidental = "f" }
-case class Gn4() extends Note { val octave = 4 ; val note = "G"; val accidental = "n" }
-case class Gs4() extends Note { val octave = 4 ; val note = "G"; val accidental = "s" }
-case class Af5() extends Note { val octave = 5 ; val note = "A"; val accidental = "f" }
-case class An5() extends Note { val octave = 5 ; val note = "A"; val accidental = "n" }
-case class As5() extends Note { val octave = 5 ; val note = "A"; val accidental = "s" }
-case class Bf5() extends Note { val octave = 5 ; val note = "B"; val accidental = "f" }
-case class Bn5() extends Note { val octave = 5 ; val note = "B"; val accidental = "n" }
-case class Bs5() extends Note { val octave = 5 ; val note = "B"; val accidental = "s" }
-case class Cf5() extends Note { val octave = 5 ; val note = "C"; val accidental = "f" }
-case class Cn5() extends Note { val octave = 5 ; val note = "C"; val accidental = "n" }
-case class Cs5() extends Note { val octave = 5 ; val note = "C"; val accidental = "s" }
-case class Df5() extends Note { val octave = 5 ; val note = "D"; val accidental = "f" }
-case class Dn5() extends Note { val octave = 5 ; val note = "D"; val accidental = "n" }
-case class Ds5() extends Note { val octave = 5 ; val note = "D"; val accidental = "s" }
-case class Ef5() extends Note { val octave = 5 ; val note = "E"; val accidental = "f" }
-case class En5() extends Note { val octave = 5 ; val note = "E"; val accidental = "n" }
-case class Es5() extends Note { val octave = 5 ; val note = "E"; val accidental = "s" }
-case class Ff5() extends Note { val octave = 5 ; val note = "F"; val accidental = "f" }
-case class Fn5() extends Note { val octave = 5 ; val note = "F"; val accidental = "n" }
-case class Fs5() extends Note { val octave = 5 ; val note = "F"; val accidental = "s" }
-case class Gf5() extends Note { val octave = 5 ; val note = "G"; val accidental = "f" }
-case class Gn5() extends Note { val octave = 5 ; val note = "G"; val accidental = "n" }
-case class Gs5() extends Note { val octave = 5 ; val note = "G"; val accidental = "s" }
-case class Af6() extends Note { val octave = 6 ; val note = "A"; val accidental = "f" }
-case class An6() extends Note { val octave = 6 ; val note = "A"; val accidental = "n" }
-case class As6() extends Note { val octave = 6 ; val note = "A"; val accidental = "s" }
-case class Bf6() extends Note { val octave = 6 ; val note = "B"; val accidental = "f" }
-case class Bn6() extends Note { val octave = 6 ; val note = "B"; val accidental = "n" }
-case class Bs6() extends Note { val octave = 6 ; val note = "B"; val accidental = "s" }
-case class Cf6() extends Note { val octave = 6 ; val note = "C"; val accidental = "f" }
-case class Cn6() extends Note { val octave = 6 ; val note = "C"; val accidental = "n" }
-case class Cs6() extends Note { val octave = 6 ; val note = "C"; val accidental = "s" }
-case class Df6() extends Note { val octave = 6 ; val note = "D"; val accidental = "f" }
-case class Dn6() extends Note { val octave = 6 ; val note = "D"; val accidental = "n" }
-case class Ds6() extends Note { val octave = 6 ; val note = "D"; val accidental = "s" }
-case class Ef6() extends Note { val octave = 6 ; val note = "E"; val accidental = "f" }
-case class En6() extends Note { val octave = 6 ; val note = "E"; val accidental = "n" }
-case class Es6() extends Note { val octave = 6 ; val note = "E"; val accidental = "s" }
-case class Ff6() extends Note { val octave = 6 ; val note = "F"; val accidental = "f" }
-case class Fn6() extends Note { val octave = 6 ; val note = "F"; val accidental = "n" }
-case class Fs6() extends Note { val octave = 6 ; val note = "F"; val accidental = "s" }
-case class Gf6() extends Note { val octave = 6 ; val note = "G"; val accidental = "f" }
-case class Gn6() extends Note { val octave = 6 ; val note = "G"; val accidental = "n" }
-case class Gs6() extends Note { val octave = 6 ; val note = "G"; val accidental = "s" }
-case class Af7() extends Note { val octave = 7 ; val note = "A"; val accidental = "f" }
-case class An7() extends Note { val octave = 7 ; val note = "A"; val accidental = "n" }
-case class As7() extends Note { val octave = 7 ; val note = "A"; val accidental = "s" }
-case class Bf7() extends Note { val octave = 7 ; val note = "B"; val accidental = "f" }
-case class Bn7() extends Note { val octave = 7 ; val note = "B"; val accidental = "n" }
-case class Bs7() extends Note { val octave = 7 ; val note = "B"; val accidental = "s" }
-case class Cf7() extends Note { val octave = 7 ; val note = "C"; val accidental = "f" }
-case class Cn7() extends Note { val octave = 7 ; val note = "C"; val accidental = "n" }
-case class Cs7() extends Note { val octave = 7 ; val note = "C"; val accidental = "s" }
-case class Df7() extends Note { val octave = 7 ; val note = "D"; val accidental = "f" }
-case class Dn7() extends Note { val octave = 7 ; val note = "D"; val accidental = "n" }
-case class Ds7() extends Note { val octave = 7 ; val note = "D"; val accidental = "s" }
-case class Ef7() extends Note { val octave = 7 ; val note = "E"; val accidental = "f" }
-case class En7() extends Note { val octave = 7 ; val note = "E"; val accidental = "n" }
-case class Es7() extends Note { val octave = 7 ; val note = "E"; val accidental = "s" }
-case class Ff7() extends Note { val octave = 7 ; val note = "F"; val accidental = "f" }
-case class Fn7() extends Note { val octave = 7 ; val note = "F"; val accidental = "n" }
-case class Fs7() extends Note { val octave = 7 ; val note = "F"; val accidental = "s" }
-case class Gf7() extends Note { val octave = 7 ; val note = "G"; val accidental = "f" }
-case class Gn7() extends Note { val octave = 7 ; val note = "G"; val accidental = "n" }
-case class Gs7() extends Note { val octave = 7 ; val note = "G"; val accidental = "s" }
-case class Af8() extends Note { val octave = 8 ; val note = "A"; val accidental = "f" }
-case class An8() extends Note { val octave = 8 ; val note = "A"; val accidental = "n" }
-case class As8() extends Note { val octave = 8 ; val note = "A"; val accidental = "s" }
-case class Bf8() extends Note { val octave = 8 ; val note = "B"; val accidental = "f" }
-case class Bn8() extends Note { val octave = 8 ; val note = "B"; val accidental = "n" }
-case class Bs8() extends Note { val octave = 8 ; val note = "B"; val accidental = "s" }
-case class Cf8() extends Note { val octave = 8 ; val note = "C"; val accidental = "f" }
-case class Cn8() extends Note { val octave = 8 ; val note = "C"; val accidental = "n" }
-case class Cs8() extends Note { val octave = 8 ; val note = "C"; val accidental = "s" }
-case class Df8() extends Note { val octave = 8 ; val note = "D"; val accidental = "f" }
-case class Dn8() extends Note { val octave = 8 ; val note = "D"; val accidental = "n" }
-case class Ds8() extends Note { val octave = 8 ; val note = "D"; val accidental = "s" }
-case class Ef8() extends Note { val octave = 8 ; val note = "E"; val accidental = "f" }
-case class En8() extends Note { val octave = 8 ; val note = "E"; val accidental = "n" }
-case class Es8() extends Note { val octave = 8 ; val note = "E"; val accidental = "s" }
-case class Ff8() extends Note { val octave = 8 ; val note = "F"; val accidental = "f" }
-case class Fn8() extends Note { val octave = 8 ; val note = "F"; val accidental = "n" }
-case class Fs8() extends Note { val octave = 8 ; val note = "F"; val accidental = "s" }
-case class Gf8() extends Note { val octave = 8 ; val note = "G"; val accidental = "f" }
-case class Gn8() extends Note { val octave = 8 ; val note = "G"; val accidental = "n" }
-case class Gs8() extends Note { val octave = 8 ; val note = "G"; val accidental = "s" }
-}
+object C0 extends Note(0, 12, UnknownLength)
+object D0 extends Note(0, 14, UnknownLength)
+object E0 extends Note(0, 16, UnknownLength)
+object F0 extends Note(0, 17, UnknownLength)
+object G0 extends Note(0, 19, UnknownLength)
+object A0 extends Note(0, 21, UnknownLength)
+object B0 extends Note(0, 23, UnknownLength)
+object C1 extends Note(1, 24, UnknownLength)
+object D1 extends Note(1, 26, UnknownLength)
+object E1 extends Note(1, 28, UnknownLength)
+object F1 extends Note(1, 29, UnknownLength)
+object G1 extends Note(1, 31, UnknownLength)
+object A1 extends Note(1, 33, UnknownLength)
+object B1 extends Note(1, 35, UnknownLength)
+object C2 extends Note(2, 36, UnknownLength)
+object D2 extends Note(2, 38, UnknownLength)
+object E2 extends Note(2, 40, UnknownLength)
+object F2 extends Note(2, 41, UnknownLength)
+object G2 extends Note(2, 43, UnknownLength)
+object A2 extends Note(2, 45, UnknownLength)
+object B2 extends Note(2, 47, UnknownLength)
+object C3 extends Note(3, 48, UnknownLength)
+object D3 extends Note(3, 50, UnknownLength)
+object E3 extends Note(3, 52, UnknownLength)
+object F3 extends Note(3, 53, UnknownLength)
+object G3 extends Note(3, 55, UnknownLength)
+object A3 extends Note(3, 57, UnknownLength)
+object B3 extends Note(3, 59, UnknownLength)
+object C4 extends Note(4, 60, UnknownLength)
+object D4 extends Note(4, 62, UnknownLength)
+object E4 extends Note(4, 64, UnknownLength)
+object F4 extends Note(4, 65, UnknownLength)
+object G4 extends Note(4, 67, UnknownLength)
+object A4 extends Note(4, 69, UnknownLength)
+object B4 extends Note(4, 71, UnknownLength)
+object C5 extends Note(5, 72, UnknownLength)
+object D5 extends Note(5, 74, UnknownLength)
+object E5 extends Note(5, 76, UnknownLength)
+object F5 extends Note(5, 77, UnknownLength)
+object G5 extends Note(5, 79, UnknownLength)
+object A5 extends Note(5, 81, UnknownLength)
+object B5 extends Note(5, 83, UnknownLength)
+object C6 extends Note(6, 84, UnknownLength)
+object D6 extends Note(6, 86, UnknownLength)
+object E6 extends Note(6, 88, UnknownLength)
+object F6 extends Note(6, 89, UnknownLength)
+object G6 extends Note(6, 91, UnknownLength)
+object A6 extends Note(6, 93, UnknownLength)
+object B6 extends Note(6, 95, UnknownLength)
+object C7 extends Note(7, 96, UnknownLength)
+object D7 extends Note(7, 98, UnknownLength)
+object E7 extends Note(7, 100, UnknownLength)
+object F7 extends Note(7, 101, UnknownLength)
+object G7 extends Note(7, 103, UnknownLength)
+object A7 extends Note(7, 105, UnknownLength)
+object B7 extends Note(7, 107, UnknownLength)
+object C8 extends Note(8, 108, UnknownLength)
+object D8 extends Note(8, 110, UnknownLength)
+object E8 extends Note(8, 112, UnknownLength)
+object F8 extends Note(8, 113, UnknownLength)
+object G8 extends Note(8, 115, UnknownLength)
+object A8 extends Note(8, 117, UnknownLength)
+object B8 extends Note(8, 119, UnknownLength)
