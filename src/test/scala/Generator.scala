@@ -33,7 +33,7 @@ class Generator extends FlatSpec with Matchers {
       (0 until 9) foreach { octave =>
           ('C' to 'G').toSeq ++ ('A' to 'B').toSeq foreach { note => 
             val midiNote = getMidiNote(octave, note)
-            pw.println(s"""object $note$octave extends Note(${octave}, ${midiNote}, UnknownLength)""")
+            pw.println(s"""    def $note$octave: LineHeader = new LineHeader(this.length, this.notes, new Note(${octave}, ${midiNote}, UnknownLength))""")
         }
       }
     }

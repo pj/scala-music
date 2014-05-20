@@ -28,8 +28,8 @@ object signature {
 // lengths
 class Length {
   // start a line of a set length
-   def |(note: Note): LineHeader = {
-     new LineHeader(this, Seq(note))
+   def | : LineHeader = {
+     new LineHeader(this, Seq())
    }
 }
 
@@ -136,18 +136,6 @@ class NullNote extends Note(0, 0, UnknownLength) {}
 object ___ extends NullNote {}
 
 // tracker syntax
-class Line(length: Length, notes: Seq[Note])
-
-class LineHeader(length: Length, notes: Seq[Note]) {
-   def |(note: Note): LineHeader = {
-     new LineHeader(length, this.notes :+ note)
-   }
-   
-   def || : LineHeader = {
-     this
-   }
-}
-
 class PassageHeader(val instruments: Seq[Instrument]) {
    def |(instrument: Instrument): PassageHeader = {
      new PassageHeader(this.instruments :+ instrument)
@@ -159,13 +147,13 @@ class PassageHeader(val instruments: Seq[Instrument]) {
 }
 
 class Passage(val tempo: tempo, val signature: signature, 
-    val instruments: Seq[Instrument], val lines: Seq[LineHeader]) {
+    val instruments: Seq[Instrument], val lines: Seq[Line]) {
 }
 
 object PassageBuilder {
   // start a new passage
-  def passage(bpm: tempo, signature: signature)(passageHeader: PassageHeader, lineHeaders: LineHeader*): Passage = {
-    new Passage(bpm, signature, passageHeader.instruments, lineHeaders)
+  def passage(bpm: tempo, signature: signature)(passageHeader: PassageHeader, lines: Line*): Passage = {
+    new Passage(bpm, signature, passageHeader.instruments, lines)
   }
   
   // new passage header
@@ -174,4 +162,22 @@ object PassageBuilder {
   }
 } 
 
-// drum syntax
+class Line(length: Length, notes: Seq[Note])
+
+class LineHeader(val length: Length, val notes: Seq[Note], val currentNote: Note) {
+   def | : LineHeader = {
+     this
+   }
+   
+   def || : Line = {
+     new Line(length, notes :+ currentNote)
+   }
+     
+   def ___ : LineHeader = {
+     new LineHeader(length, notes, new NullNote)
+   }
+   
+   def A4: LineHeader = {
+     new LineHeader(length, notes, new Note(4, 64, length))
+   }
+}

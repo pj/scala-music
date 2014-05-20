@@ -19,10 +19,10 @@ class TrackerTest extends FlatSpec with Matchers {
   "Thing" should "generate stuff" in {
     val test = passage(100 bpm, 4-/-4)( 
                   instruments | piano | guitar ||,   
-                  q | A4 p   | A4    ||,
-                  w | B5   | B6    ||,
-                  q | C5   | D7    ||,
-                  w | ___  | ___    ||
+                  q | A4 | A4 ||
+//                  w | B5   | B6    ||,
+//                  q | C5   | D7    ||,
+//                  w | ___  | ___    ||
                   )
     
     println(test)
