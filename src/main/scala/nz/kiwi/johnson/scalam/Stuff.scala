@@ -27,10 +27,6 @@ object signature {
 
 // lengths
 class Length {
-  // start a line of a set length
-   def | : LineHeader = {
-     new LineHeader(this, Seq())
-   }
 }
 
 object UnknownLength extends Length
@@ -77,11 +73,11 @@ class Note(val octave: Int, val note: Int, val length: Length, val velocity: Int
     new Note(octave, note, length, newVelocity, Some(newVelocityChange), Some(newPitchChange))
   }
   
-  private def length(newlength: Length) {
+  private def length(newlength: Length) = {
     new Note(octave, note, newlength, velocity, velocityChange, pitchChange)
   }
   
-  private def dotted(newlength: Length, dots: Int) {
+  private def dotted(newlength: Length, dots: Int) = {
     new Note(octave, note, new dotted(newlength, dots), velocity, velocityChange, pitchChange)
   }
   
@@ -133,7 +129,6 @@ class Note(val octave: Int, val note: Int, val length: Length, val velocity: Int
 }
 
 class NullNote extends Note(0, 0, UnknownLength) {}
-object ___ extends NullNote {}
 
 // tracker syntax
 class PassageHeader(val instruments: Seq[Instrument]) {
@@ -164,9 +159,17 @@ object PassageBuilder {
 
 class Line(length: Length, notes: Seq[Note])
 
+//object notes {
+//object A4 extends Note(4, 64, UnknownLength)
+//}
 class LineHeader(val length: Length, val notes: Seq[Note], val currentNote: Note) {
-   def | : LineHeader = {
-     this
+   
+   def |(note: Note) : LineHeader = {
+     new LineHeader(length, notes, note)
+   }
+   
+   def x : LineHeader = {
+     new LineHeader(length, notes, new NullNote)
    }
    
    def || : Line = {
@@ -177,7 +180,15 @@ class LineHeader(val length: Length, val notes: Seq[Note], val currentNote: Note
      new LineHeader(length, notes, new NullNote)
    }
    
-   def A4: LineHeader = {
-     new LineHeader(length, notes, new Note(4, 64, length))
+   def h : LineHeader = {
+     new LineHeader(length, notes, currentNote.half)
    }
+   
+   def A4 : LineHeader = {
+     Note(4, 64, UnknownLength)
+   }
+}
+
+object LineStarts {
+def q : LineHeader =  new LineHeader(lengths.quaver, Seq(), new NullNote())
 }
