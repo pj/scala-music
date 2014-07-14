@@ -6,6 +6,7 @@ import scala.collection.JavaConversions._
 import javax.sound.midi.Synthesizer
 import javax.sound.midi.Sequencer
 import javax.sound.midi.MidiDevice
+import javax.sound.midi.Sequence
 
 object MidiUtils {
   val serviceLoaders = ServiceLoader.load(classOf[MidiDeviceProvider]).toSeq
@@ -47,5 +48,9 @@ object MidiUtils {
     
       transmitter.setReceiver(receiver)
     }
+  }
+  
+  implicit def passageToSequence(passage: Passage): Sequence = {
+    new Sequence(Sequence.PPQ, 24, 16)
   }
 }

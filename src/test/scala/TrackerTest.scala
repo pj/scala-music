@@ -1,7 +1,6 @@
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 import java.io.File
-import nz.kiwi.johnson.scalam.PassageBuilder._
 import nz.kiwi.johnson.scalam.Instruments._
 import scala.collection.JavaConversions._
 import javax.sound.midi._
@@ -11,19 +10,23 @@ import java.io.FileInputStream
 import nz.kiwi.johnson.scalam.MidiUtils.PimpedMidiDevice
 import nz.kiwi.johnson.scalam.tempo.PimpedTempoInt
 import nz.kiwi.johnson.scalam.signature.PimpedSignature
-import nz.kiwi.johnson.scalam.LineStarts._
 import nz.kiwi.johnson.scalam.MidiUtils
-import nz.kiwi.johnson.scalam.notes._
+import nz.kiwi.johnson.scalam.Passage.passage
+import nz.kiwi.johnson.scalam.Passage.instruments
+import nz.kiwi.johnson.scalam.LineStarters._
+import nz.kiwi.johnson.scalam._
 
 class TrackerTest extends FlatSpec with Matchers {  
   "Thing" should "generate stuff" in {
-    val test = passage(100 bpm, 4-/-4)( 
-                  instruments | piano | guitar ||,   
-                  q | A4() | A4 ||
-//                  w | B5   | B6    ||,
-//                  q | C5   | D7    ||,
-//                  w | ___  | ___    ||
-                  )
+    val test = passage(
+                  100 bpm, 
+                  4-/-4, 
+                  instruments(AcousticGrandPiano, AcousticGrandPiano, AcousticGrandPiano),   
+                  q(A4, C4, E4),
+                  q(C4, E4, G4),
+                  q(E4, G4, A5),
+                  q(A4, C4, E4)
+                )
     
     println(test)
 
@@ -34,7 +37,7 @@ class TrackerTest extends FlatSpec with Matchers {
     
     sequencer.setSequence(file)
    
-    synthesizer >> sequencer
+    sequencer >> synthesizer
     
     sequencer.start()
     
