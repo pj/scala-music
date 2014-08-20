@@ -96,9 +96,9 @@ class Note(val octave: Int, val note: Int, val length: Length, val velocity: Int
   def semiquaver = length(lengths.semiquaver)
   
   // dotted
-  def *   = dotted(1)
-  def **  = dotted(2)
-  def *** = dotted(3)
+  def d   = dotted(1)
+  def dd  = dotted(2)
+  def ddd = dotted(3)
    
   // velocities
   def cres = new Note(octave, note, length, velocity, Some(volume_change.cres), pitchChange)
@@ -123,10 +123,10 @@ class Note(val octave: Int, val note: Int, val length: Length, val velocity: Int
   def gliss = new Note(octave, note, length, velocity, velocityChange, Some(pitch_change.gliss))
   def port = new Note(octave, note, length, velocity, Some(volume_change.decr), pitchChange)
   
-  def sharp = new Note(octave, note+1, length, velocity, velocityChange, pitchChange)
-  def flat  = new Note(octave, note-1, length, velocity, velocityChange, pitchChange)
-  def b     = flat
-  def sh    = sharp
+//  def sharp = new Note(octave, note+1, length, velocity, velocityChange, pitchChange)
+//  def flat  = new Note(octave, note-1, length, velocity, velocityChange, pitchChange)
+//  def b     = flat
+//  def sh    = sharp
 }
 
 class NullNote extends Note(0, 0, UnknownLength) {}
@@ -154,8 +154,44 @@ object LineStarters {
   def semiquaver(notes: Note*) = length(lengths.semiquaver, notes)
 }
 
+// A sequence is a collection of collection of passages
+class Sequence(val passages: Seq[Seq[Passage]]) {
+  
+  def <>(otherPassage: Passage) = {
+    new Sequence(this.passages :+ Seq(otherPassage))
+  } 
+    
+  def |(otherPassage: Passage) = {
+    new Sequence(this.passages :+ Seq(otherPassage))
+  }
+  
+  def |(passages: Seq[Passage]) = {
+    new Sequence(this.passages ++ Seq(passages))
+  }
+  
+  def |(sequence: Sequence) = {
+    new Sequence(this.passages ++ sequence.passages)
+  }
+}
+
 class Passage(val tempo: tempo, val signature: signature, 
     val instruments: Seq[Instrument], val lines: Seq[Line]) {
+  
+  def <>(otherPassage: Passage) = {
+    new Sequence(Seq(Seq(this, otherPassage)))
+  } 
+  
+  def |(otherPassage: Passage) = {
+    new Sequence(Seq(Seq(this), Seq(otherPassage)))
+  }
+  
+  def |(passages: Seq[Passage]) = {
+    new Sequence(Seq(Seq(this), passages))
+  }
+  
+  def |(sequence: Sequence) = {
+    new Sequence(Seq(this) +: sequence.passages)
+  }
 }
 
 class NotationException(msg: String) extends Exception(msg)

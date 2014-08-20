@@ -4,7 +4,6 @@ class Instrument(instrumentNumber: Int, name: String) {
   
 }
 
-object Instruments {
   // Piano:
   object AcousticGrandPiano extends Instrument(1, "Acoustic Grand Piano") {}
   object BrightAcousticPiano extends Instrument(2, "Bright Acoustic Piano") {}
@@ -164,4 +163,3 @@ object Instruments {
   object Helicopter extends Instrument(126, "Helicopter") {}
   object Applause extends Instrument(127, "Applause") {}
   object Gunshot extends Instrument(128, "Gunshot") {}
-}
