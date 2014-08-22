@@ -1,35 +1,44 @@
 package nz.kiwi.johnson.scalam
 
-// tempos
-class tempo(val bpm: Int)
+trait PassagePart
 
-object tempo {
-  implicit class PimpedTempoInt(bpm: Int) {
-    def bpm: tempo = {
-      new tempo(bpm)
-    }
-  }
+class Line(val lineStart: Length, val notes: Seq[Note]) extends PassagePart {
+	def addNote(note: Note) = {
+	  new Line(lineStart, notes :+ note)
+	}
 }
 
-object adagio extends tempo(96)
-object presto extends tempo(120)
+// volume changes
+sealed trait velocity_change
 
-// time signatures
-class signature(val beats: Int, val division: Int)
+object velocity_change {
+  class crescendo extends velocity_change
+  class decrescendo extends velocity_change
+  object crescendo extends crescendo
+  object decrescendo extends decrescendo
+  object cres extends crescendo
+  object decr extends decrescendo
+}
 
-object signature {
-  implicit class PimpedSignature(beats: Int) {
-    def -/-(division: Int) = {
-      new signature(beats, division)
-    }
-  }
+// pitch change
+sealed trait pitch_change
+
+object pitch_change {
+  object port extends pitch_change
+  object gliss extends pitch_change
 }
 
 // lengths
-class Length {
+trait Length extends BarResultMethods {
+  // used when starting a line 
+  def ||(note: Note): LineBuilder = {
+    new LineBuilder(new Line(this, Seq(note)))
+  }
 }
 
 object UnknownLength extends Length
+
+object __ extends Length
 
 object lengths {
   object w extends Length
@@ -44,177 +53,357 @@ object lengths {
   object semiquaver extends Length
 }
 
-class Dotted(underlying: Length, dots: Int) extends Length {
+class DottedLength(val length: Length, val dots: Int) extends Length
+
+class Dotted(val dots: Int)
+
+object d extends Dotted(1)
+object dd extends Dotted(2)
+object ddd extends Dotted(3)
+
+class BarResult(val notes: Seq[Note]) {
+  def |(otherNote: Note): BarResult = {
+    new BarResult(notes :+ otherNote)
+  }
+}
+
+object BarResult {
+  object | extends BarResult(null)
+}
+
+trait BarResultMethods {
+  def |(note: Note): BarResult = {
+    new BarResult(Seq(note))
+  }
+}
+
+class ReturnResult
+
+object ReturnResult {
+  object || extends ReturnResult
+}
+
+trait ReturnResultMethods {
+  def ||(): ReturnResult = {
+    new ReturnResult
+  }
+}
+
+// velocities
+class Velocity(val volume: Int) extends BarResultMethods
+
+object Velocity {
+  def velocity(volume: Int) = {
+    new Velocity(volume)
+  }
   
+  def v(volume: Int) = {
+    new Velocity(volume)
+  }
 }
 
-// volume changes
-sealed trait volume_change
-
-object volume_change {
-  object cres extends volume_change
-  object decr extends volume_change
+object velocities {
+  object ppp extends Velocity(16)
+  object pp extends Velocity(33)
+  object p extends Velocity(49)
+  object mp extends Velocity(64)
+  object mf extends Velocity(80)
+  object f extends Velocity(96)
+  object ff extends Velocity(112)
+  object fff extends Velocity(126)
+  
+  object v {
+    def apply(velocity: Int): Velocity = {
+      new Velocity(velocity)
+    }
+  }
 }
 
-// pitch change
-sealed trait pitch_change
-
-object pitch_change {
-  object port extends pitch_change
-  object gliss extends pitch_change
+trait CommonMethods {
+  def dotted(dots: Int): LineBuilder
+  
+  def d: LineBuilder   = dotted(1)
+  def dd: LineBuilder  = dotted(2)
+  def ddd: LineBuilder = dotted(3)
+  
+  def v(velocity: Int): LineBuilder
+  def v(velocity: Int, vc: velocity_change): LineBuilder
+  
+  // velocities - blank
+  def ppp  = v(16)
+  def pp   = v(33)
+  def p    = v(49)
+  def mp   = v(64)
+  def mf   = v(80)
+  def f    = v(96)
+  def ff   = v(112)
+  def fff  = v(126)
+  
+  // with velocity change
+  def ppp(vc: velocity_change)  = v(16, vc)
+  def pp(vc: velocity_change)   = v(33, vc)
+  def p(vc: velocity_change)    = v(49, vc)
+  def mp(vc: velocity_change)   = v(64, vc)
+  def mf(vc: velocity_change)   = v(80, vc)
+  def f(vc: velocity_change)    = v(96, vc)
+  def ff(vc: velocity_change)   = v(112, vc)
+  def fff(vc: velocity_change)  = v(126, vc)
+  
+  def lengthNormal(newlength: Length): LineBuilder
+  def lengthDotted(newLength: Length, dotted: Dotted): LineBuilder
+  def lengthBarResult(newLength: Length, bar: BarResult): LineBuilder
+  def lengthVelocity(newLength: Length, velocity: Velocity): LineBuilder
+  def lengthReturn(newLength: Length, ret: ReturnResult): Line
+  
+  def w: LineBuilder = lengthNormal(lengths.whole)
+  def h: LineBuilder = lengthNormal(lengths.half)
+  def q: LineBuilder = lengthNormal(lengths.quaver)
+  def e: LineBuilder = lengthNormal(lengths.eighth)
+  def s: LineBuilder = lengthNormal(lengths.semiquaver)
+  
+  def whole: LineBuilder = lengthNormal(lengths.whole)
+  def half: LineBuilder = lengthNormal(lengths.half)
+  def quaver: LineBuilder = lengthNormal(lengths.quaver)
+  def eighth: LineBuilder = lengthNormal(lengths.eighth)
+  def semiquaver: LineBuilder = lengthNormal(lengths.semiquaver)
+  
+  // with dotted
+  def w(dotted: Dotted): LineBuilder = lengthDotted(lengths.whole, dotted)
+  def h(dotted: Dotted): LineBuilder = lengthDotted(lengths.half, dotted)
+  def q(dotted: Dotted): LineBuilder = lengthDotted(lengths.quaver, dotted)
+  def e(dotted: Dotted): LineBuilder = lengthDotted(lengths.eighth, dotted)
+  def s(dotted: Dotted): LineBuilder = lengthDotted(lengths.semiquaver, dotted)
+  
+  def whole(dotted: Dotted): LineBuilder = lengthDotted(lengths.whole, dotted)
+  def half(dotted: Dotted): LineBuilder = lengthDotted(lengths.half, dotted)
+  def quaver(dotted: Dotted): LineBuilder = lengthDotted(lengths.quaver, dotted)
+  def eighth(dotted: Dotted): LineBuilder = lengthDotted(lengths.eighth, dotted)
+  def semiquaver(dotted: Dotted): LineBuilder = lengthDotted(lengths.semiquaver, dotted) 
+  
+  // with volume
+  def w(velocity: Velocity): LineBuilder = lengthVelocity(lengths.whole, velocity)
+  def h(velocity: Velocity): LineBuilder = lengthVelocity(lengths.half, velocity)
+  def q(velocity: Velocity): LineBuilder = lengthVelocity(lengths.quaver, velocity)
+  def e(velocity: Velocity): LineBuilder = lengthVelocity(lengths.eighth, velocity)
+  def s(velocity: Velocity): LineBuilder = lengthVelocity(lengths.semiquaver, velocity)
+  
+  def whole(velocity: Velocity): LineBuilder = lengthVelocity(lengths.whole, velocity)
+  def half(velocity: Velocity): LineBuilder = lengthVelocity(lengths.half, velocity)
+  def quaver(velocity: Velocity): LineBuilder = lengthVelocity(lengths.quaver, velocity)
+  def eighth(velocity: Velocity): LineBuilder = lengthVelocity(lengths.eighth, velocity)
+  def semiquaver(velocity: Velocity): LineBuilder = lengthVelocity(lengths.semiquaver, velocity)
+  
+  // bar results
+  def w(bar: BarResult): LineBuilder = lengthBarResult(lengths.whole, bar)
+  def h(bar: BarResult): LineBuilder = lengthBarResult(lengths.half, bar)
+  def q(bar: BarResult): LineBuilder = lengthBarResult(lengths.quaver, bar)
+  def e(bar: BarResult): LineBuilder = lengthBarResult(lengths.eighth, bar)
+  def s(bar: BarResult): LineBuilder = lengthBarResult(lengths.semiquaver, bar)
+  
+  def whole(bar: BarResult): LineBuilder = lengthBarResult(lengths.whole, bar)
+  def half(bar: BarResult): LineBuilder = lengthBarResult(lengths.half, bar)
+  def quaver(bar: BarResult): LineBuilder = lengthBarResult(lengths.quaver, bar)
+  def eighth(bar: BarResult): LineBuilder = lengthBarResult(lengths.eighth, bar)
+  def semiquaver(bar: BarResult): LineBuilder = lengthBarResult(lengths.semiquaver, bar)
+  
+  // return results
+  def w(ret: ReturnResult): Line = lengthReturn(lengths.whole, ret)
+  def h(ret: ReturnResult): Line = lengthReturn(lengths.half, ret)
+  def q(ret: ReturnResult): Line = lengthReturn(lengths.quaver, ret)
+  def e(ret: ReturnResult): Line = lengthReturn(lengths.eighth, ret)
+  def s(ret: ReturnResult): Line = lengthReturn(lengths.semiquaver, ret)
+  
+  def whole(ret: ReturnResult): Line = lengthReturn(lengths.whole, ret)
+  def half(ret: ReturnResult): Line = lengthReturn(lengths.half, ret)
+  def quaver(ret: ReturnResult): Line = lengthReturn(lengths.quaver, ret)
+  def eighth(ret: ReturnResult): Line = lengthReturn(lengths.eighth, ret)
+  def semiquaver(ret: ReturnResult): Line = lengthReturn(lengths.semiquaver, ret)
+  
+  // note methods
+  def note(octave: Int, note: Int, length: Length): LineBuilder
+  
+  def noteBar(octave: Int, note: Int, length: Length, bar: BarResult): LineBuilder
+  
+  def C4: LineBuilder = note(4, 60, UnknownLength)
+  def C4s: LineBuilder = note(4, 61, UnknownLength)
+  def D4b: LineBuilder = note(4, 61, UnknownLength)
+  def D4: LineBuilder = note(4, 62, UnknownLength) 
+  def D4s: LineBuilder = note(4, 63, UnknownLength)
+  def E4b: LineBuilder = note(4, 63, UnknownLength)
+  def E4: LineBuilder = note(4, 64, UnknownLength)
+  def F4: LineBuilder = note(4, 65, UnknownLength)
+  def F4s: LineBuilder = note(4, 66, UnknownLength)
+  def G4b: LineBuilder = note(4, 66, UnknownLength)
+  def G4: LineBuilder = note(4, 67, UnknownLength)
+  def G4s: LineBuilder = note(4, 68, UnknownLength)
+  def A4b: LineBuilder = note(4, 68, UnknownLength)
+  def A4: LineBuilder = note(4, 69, UnknownLength)
+  def A4s: LineBuilder = note(4, 70, UnknownLength)
+  def B4b: LineBuilder = note(4, 70, UnknownLength)
+  def B4: LineBuilder = note(4, 71, UnknownLength)
+  
+  def C4(length: Length): LineBuilder = note(4, 60, length)
+  def C4s(length: Length): LineBuilder = note(4, 61, length)
+  def D4b(length: Length): LineBuilder = note(4, 61, length)
+  def D4(length: Length): LineBuilder = note(4, 62, length) 
+  def D4s(length: Length): LineBuilder = note(4, 63, length)
+  def E4b(length: Length): LineBuilder = note(4, 63, length)
+  def E4(length: Length): LineBuilder = note(4, 64, length)
+  def F4(length: Length): LineBuilder = note(4, 65, length)
+  def F4s(length: Length): LineBuilder = note(4, 66, length)
+  def G4b(length: Length): LineBuilder = note(4, 66, length)
+  def G4(length: Length): LineBuilder = note(4, 67, length)
+  def G4s(length: Length): LineBuilder = note(4, 68, length)
+  def A4b(length: Length): LineBuilder = note(4, 68, length)
+  def A4(length: Length): LineBuilder = note(4, 69, length)
+  def A4s(length: Length): LineBuilder = note(4, 70, length)
+  def B4b(length: Length): LineBuilder = note(4, 70, length)
+  def B4(length: Length): LineBuilder = note(4, 71, length)
+  
+  def C4(bar: BarResult): LineBuilder = noteBar(4, 60, UnknownLength, bar)
+  def C4s(bar: BarResult): LineBuilder = noteBar(4, 61, UnknownLength, bar)
+  def D4b(bar: BarResult): LineBuilder = noteBar(4, 61, UnknownLength, bar)
+  def D4(bar: BarResult): LineBuilder = noteBar(4, 62, UnknownLength, bar) 
+  def D4s(bar: BarResult): LineBuilder = noteBar(4, 63, UnknownLength, bar)
+  def E4b(bar: BarResult): LineBuilder = noteBar(4, 63, UnknownLength, bar)
+  def E4(bar: BarResult): LineBuilder = noteBar(4, 64, UnknownLength, bar)
+  def F4(bar: BarResult): LineBuilder = noteBar(4, 65, UnknownLength, bar)
+  def F4s(bar: BarResult): LineBuilder = noteBar(4, 66, UnknownLength, bar)
+  def G4b(bar: BarResult): LineBuilder = noteBar(4, 66, UnknownLength, bar)
+  def G4(bar: BarResult): LineBuilder = noteBar(4, 67, UnknownLength, bar)
+  def G4s(bar: BarResult): LineBuilder = noteBar(4, 68, UnknownLength, bar)
+  def A4b(bar: BarResult): LineBuilder = noteBar(4, 68, UnknownLength, bar)
+  def A4(bar: BarResult): LineBuilder = noteBar(4, 69, UnknownLength, bar)
+  def A4s(bar: BarResult): LineBuilder = noteBar(4, 70, UnknownLength, bar)
+  def B4b(bar: BarResult): LineBuilder = noteBar(4, 70, UnknownLength, bar)
+  def B4(bar: BarResult): LineBuilder = noteBar(4, 71, UnknownLength, bar)
 }
+
+class LineBuilder(line: Line) extends CommonMethods {  
+  // note methods
+  def note(octave: Int, note: Int, length: Length) = {
+    new LineBuilder(line.addNote(new Note(octave, note, length)))
+  }
+  
+  // doted
+  def dotted(dots: Int) = {
+    val note = line.notes.last
+    new LineBuilder(line.addNote(note.withDotted(dots)))
+  }
+  
+  // velocity methods
+  def v(newVelocity: Int) = {
+    val note = line.notes.last
+    new LineBuilder(line.addNote(note.withVelocity(newVelocity)))
+  }
+  
+  // velocities - with changes
+  private def v(newVelocity: Int, vc: velocity_change) = {
+    val note = line.notes.last
+    new LineBuilder(line.addNote(new Note(note.octave, note.note, note.length, newVelocity, Some(vc), note.pitchChange)))
+  }
+  
+  // normal
+  def lengthNormal(newLength: Length) = {
+    val note = line.notes.last
+    new LineBuilder(line.addNote(note.withLength(newLength)))
+  }
+  
+  def lengthDotted(newLength: Length, dotted: Dotted) = {
+    val note = line.notes.last
+    new LineBuilder(line.addNote(note.withLength(newLength).withDotted(dotted)))
+  }
+  
+  def lengthBarResult(newLength: Length, bar: BarResult) = {
+    val note = bar.notes.last
+    new LineBuilder(line.addNote(note.withLength(newLength)))
+  }
+  
+  def lengthVelocity(newLength: Length, velocity: Velocity) = {
+    val note = line.notes.last
+    new LineBuilder(line.addNote(note.withLength(newLength).withVelocity(velocity)))
+  }
+  
+  def lengthReturn(newLength: Length, ret: ReturnResult) = {
+    val note = line.notes.last
+    line.addNote(note.withLength(newLength))
+  }
+  
+  def ||(): Line = {
+    line
+  }
+  
+  def |(nextNote: Note): LineBuilder = {
+    new LineBuilder(line.addNote(nextNote))
+  }
+}
+
 class Note(val octave: Int, val note: Int, val length: Length, val velocity: Int = 127, 
-           val velocityChange: Option[volume_change] = None, val pitchChange: Option[pitch_change] = None) {
-  // return copies of the note with additional options
-  def apply(newVelocity: Int): Note = {
+           val velocityChange: Option[velocity_change] = None, val pitchChange: Option[pitch_change] = None)  {
+//            extends CommonMethods {
+  
+//  def dotted(dots: Int) = {
+//    new LineBuilder(Seq(new Note(octave, note, new DottedLength(length, dots), velocity, velocityChange, pitchChange)))
+//  }
+//  
+//  def lengthNormal(newLength: Length) = {
+//    new LineBuilder(Seq(new Note(octave, note, newLength, velocity, velocityChange, pitchChange)))
+//  }
+//  
+//  def lengthDotted(newLength: Length, dotted: Dotted) = {
+//    new LineBuilder(Seq(new Note(octave, note, new DottedLength(newLength, dotted.dots), velocity, velocityChange, pitchChange)))
+//  }
+//  
+//  def lengthVelocity(newLength: Length, velocity: Velocity) = {
+//    new LineBuilder(Seq(new Note(octave, note, newLength, velocity.volume, velocityChange, pitchChange)))
+//  }
+//  
+//  def lengthBarResult(newLength: Length, bar: BarResult) = {
+//    val note = bar.notes.last
+//    new LineBuilder(Seq(this, new Note(note.octave, note.note, newLength, note.velocity, note.velocityChange, note.pitchChange)))
+//  }
+//  
+//  def lengthReturn(newLength: Length, ret: ReturnResult) = {
+//    Seq(new Note(octave, note, newLength, velocity, velocityChange, pitchChange))
+//  }
+  
+  def withLength(newLength: Length): Note = {
+    new Note(octave, note, newLength, velocity, velocityChange, pitchChange)
+  }
+  
+  def withVelocity(newVelocity: Velocity): Note = {
+    new Note(octave, note, length, newVelocity.volume, velocityChange, pitchChange)
+  }
+  
+  def withVelocity(newVelocity: Int): Note = {
     new Note(octave, note, length, newVelocity, velocityChange, pitchChange)
   }
   
-  def apply(newVelocity: Int, newVelocityChange: volume_change, newPitchChange: pitch_change): Note = {
-    new Note(octave, note, length, newVelocity, Some(newVelocityChange), Some(newPitchChange))
+  def withDotted(dotted: Dotted): Note = {
+    new Note(octave, note, new DottedLength(length, dotted.dots), velocity, velocityChange, pitchChange)
   }
   
-  private def length(newlength: Length) = {
-    new Note(octave, note, newlength, velocity, velocityChange, pitchChange)
-  }
-  
-  private def dotted(dots: Int) = {
-    new Note(octave, note, new Dotted(length, dots), velocity, velocityChange, pitchChange)
-  }
-  
-  // length methods
-  def w = length(lengths.whole)
-  def h = length(lengths.half)
-  def q = length(lengths.quaver)
-  def e = length(lengths.eighth)
-  def s = length(lengths.semiquaver)
-  
-  def whole = length(lengths.whole)
-  def half = length(lengths.half)
-  def quaver = length(lengths.quaver)
-  def eighth = length(lengths.eighth)
-  def semiquaver = length(lengths.semiquaver)
-  
-  // dotted
-  def d   = dotted(1)
-  def dd  = dotted(2)
-  def ddd = dotted(3)
-   
-  // velocities
-  def cres = new Note(octave, note, length, velocity, Some(volume_change.cres), pitchChange)
-  def decr = new Note(octave, note, length, velocity, Some(volume_change.decr), pitchChange)
-  
-  def crescendo = new Note(octave, note, length, velocity, Some(volume_change.cres), pitchChange)
-  def decrescendo = new Note(octave, note, length, velocity, Some(volume_change.decr), pitchChange)
-  
-  // volumes
-  def ppp  = new Note(octave, note, length, 16, velocityChange, pitchChange)
-  def pp   = new Note(octave, note, length, 33, velocityChange, pitchChange)
-  def p    = new Note(octave, note, length, 49, velocityChange, pitchChange) 
-  def mp   = new Note(octave, note, length, 64, velocityChange, pitchChange) 
-  def mf   = new Note(octave, note, length, 80, velocityChange, pitchChange) 
-  def f    = new Note(octave, note, length, 96, velocityChange, pitchChange) 
-  def ff   = new Note(octave, note, length, 112, velocityChange, pitchChange) 
-  def fff  = new Note(octave, note, length, 126, velocityChange, pitchChange) 
-  
-  def v(newVelocity: Int) = new Note(octave, note, length, newVelocity, velocityChange, pitchChange)
-  
-  // pitch
-  def gliss = new Note(octave, note, length, velocity, velocityChange, Some(pitch_change.gliss))
-  def port = new Note(octave, note, length, velocity, Some(volume_change.decr), pitchChange)
-  
-//  def sharp = new Note(octave, note+1, length, velocity, velocityChange, pitchChange)
-//  def flat  = new Note(octave, note-1, length, velocity, velocityChange, pitchChange)
-//  def b     = flat
-//  def sh    = sharp
-}
-
-class NullNote extends Note(0, 0, UnknownLength) {}
-
-object ___ extends NullNote
-
-class Line(length: Length, val notes: Seq[Note])
-
-object LineStarters {
-  private def length(newlength: Length, notes: Seq[Note]) = {
-    new Line(newlength, notes)
-  }
-  
-  // length methods
-  def w(notes: Note*) = length(lengths.whole, notes)
-  def h(notes: Note*) = length(lengths.half, notes)
-  def q(notes: Note*) = length(lengths.quaver, notes)
-  def e(notes: Note*) = length(lengths.eighth, notes)
-  def s(notes: Note*) = length(lengths.semiquaver, notes)
-  
-  def whole(notes: Note*) = length(lengths.whole, notes)
-  def half(notes: Note*) = length(lengths.half, notes)
-  def quaver(notes: Note*) = length(lengths.quaver, notes)
-  def eighth(notes: Note*) = length(lengths.eighth, notes)
-  def semiquaver(notes: Note*) = length(lengths.semiquaver, notes)
-}
-
-// A sequence is a collection of collection of passages
-class Sequence(val passages: Seq[Seq[Passage]]) {
-  
-  def <>(otherPassage: Passage) = {
-    new Sequence(this.passages :+ Seq(otherPassage))
-  } 
-    
-  def |(otherPassage: Passage) = {
-    new Sequence(this.passages :+ Seq(otherPassage))
-  }
-  
-  def |(passages: Seq[Passage]) = {
-    new Sequence(this.passages ++ Seq(passages))
-  }
-  
-  def |(sequence: Sequence) = {
-    new Sequence(this.passages ++ sequence.passages)
+  def withDotted(dots: Int): Note = {
+    new Note(octave, note, new DottedLength(length, dots), velocity, velocityChange, pitchChange)
   }
 }
 
-class Passage(val tempo: tempo, val signature: signature, 
-    val instruments: Seq[Instrument], val lines: Seq[Line]) {
-  
-  def <>(otherPassage: Passage) = {
-    new Sequence(Seq(Seq(this, otherPassage)))
-  } 
-  
-  def |(otherPassage: Passage) = {
-    new Sequence(Seq(Seq(this), Seq(otherPassage)))
-  }
-  
-  def |(passages: Seq[Passage]) = {
-    new Sequence(Seq(Seq(this), passages))
-  }
-  
-  def |(sequence: Sequence) = {
-    new Sequence(Seq(this) +: sequence.passages)
-  }
-}
+object ___ extends Note(-1, -1, null)
 
-class NotationException(msg: String) extends Exception(msg)
-
-object Passage {
-  // start a new passage
-  def apply(bpm: tempo, signature: signature, instruments: Seq[Instrument], lines: Line*): Passage = {
-    // verify that the lines and instruments are the same size
-    lines.zipWithIndex.foreach {
-      case (line, idx) =>
-        if (line.notes.length != instruments.length) {
-          throw new NotationException("Number of notes doesn't equal number of instruments at line " + idx)
-        }
-    }
-    
-    new Passage(bpm, signature, instruments, lines)
-  }
-  
-  def passage(bpm: tempo, signature: signature, instruments: Seq[Instrument], lines: Line*): Passage = {
-    apply(bpm, signature, instruments, lines: _*)
-  }
-  
-  def instruments(instruments: Instrument*) = {
-    instruments
-  }
-}
+object C4 extends Note(4, 60, UnknownLength)
+object C4s extends Note(4, 61, UnknownLength)
+object D4b extends Note(4, 61, UnknownLength)
+object D4 extends Note(4, 62, UnknownLength)
+object D4s extends Note(4, 63, UnknownLength)
+object E4b extends Note(4, 63, UnknownLength)
+object E4 extends Note(4, 64, UnknownLength)
+object F4 extends Note(4, 65, UnknownLength)
+object F4s extends Note(4, 66, UnknownLength)
+object G4b extends Note(4, 66, UnknownLength)
+object G4 extends Note(4, 67, UnknownLength)
+object G4s extends Note(4, 68, UnknownLength)
+object A4b extends Note(4, 68, UnknownLength)
+object A4 extends Note(4, 69, UnknownLength)
+object A4s extends Note(4, 70, UnknownLength)
+object B4b extends Note(4, 70, UnknownLength)
+object B4 extends Note(4, 71, UnknownLength)
