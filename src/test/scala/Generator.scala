@@ -4,7 +4,7 @@ import org.scalatest.Matchers
 import java.io.File
 import org.scalatest.Ignore
 
-//@Ignore
+@Ignore
 class Generator extends FlatSpec with Matchers {
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
     val p = new java.io.PrintWriter(f)

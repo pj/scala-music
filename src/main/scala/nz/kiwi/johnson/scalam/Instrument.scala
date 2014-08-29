@@ -1,5 +1,7 @@
 package nz.kiwi.johnson.scalam
 
+import javax.sound.midi.MidiDevice
+
 // Purely decorative
 object inst {
   def ||(instrument: Instrument): InstrumentSequence = {
@@ -7,15 +9,21 @@ object inst {
   }
 }
 
-class InstrumentSequence(val instruments: Seq[Instrument]) {
+case class InstrumentSequence(val instruments: Seq[Instrument], val replaceRight: Boolean = false) extends PassagePart {
     def |(nextInstrument: Instrument): InstrumentSequence = {
       new InstrumentSequence(instruments :+ nextInstrument)
     }  
     
-    def ||(): Seq[Instrument] = {
-      return instruments
+    // decorative
+    def ||(): InstrumentSequence = {
+      this
     }
     
+    // Replace all existing instruments on this line
+    
+    def ||-->(): InstrumentSequence = {
+      InstrumentSequence(instruments, true)
+    }
   
     // Piano:
 	def AcousticGrandPiano(): InstrumentSequence = new InstrumentSequence(instruments :+ Instrument.AcousticGrandPiano)
@@ -178,14 +186,35 @@ class InstrumentSequence(val instruments: Seq[Instrument]) {
 	def Gunshot(): InstrumentSequence = new InstrumentSequence(instruments :+ Instrument.Gunshot) 
 }
 
-case class Instrument(instrumentNumber: Int, name: String) {
+case class Instrument(val instrumentNumber: Int, val name: String, channel: Option[Int] = None, midiOutputDevice: Option[MidiDevice] = None) {
     def |(nextInst: Instrument): InstrumentSequence = {
       new InstrumentSequence(Seq(nextInst))
     }
+    
+    def channel(newChannel: Int): Instrument = {
+      new Instrument(instrumentNumber, name, Some(newChannel))
+    }
+    
+    def ch(newChannel: Int): Instrument = {
+      channel(newChannel)
+    }
+    
+    def device(newDevice: MidiDevice): Instrument = {
+      new Instrument(instrumentNumber, name, channel, Some(newDevice))
+    }
+    
+    def dev(newDevice: MidiDevice): Instrument = {
+      new Instrument(instrumentNumber, name, channel, Some(newDevice))
+    }
+    
+    override def toString() = name
 }
 
-// ditto instrument
-object rep extends Instrument(-1, "Ditto")
+// ditto instrument - extends instrument to this vline from the left
+object --> extends Instrument(-1, "-->")
+
+// carry previous instrument on, i.e do nothing
+object _v_ extends Instrument(-2, "_v_")
 
 object Instrument {
 // Piano:

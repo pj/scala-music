@@ -6,10 +6,11 @@ import nz.kiwi.johnson.scalam.lengths
 import nz.kiwi.johnson.scalam._
 import nz.kiwi.johnson.scalam.Passage._
 import nz.kiwi.johnson.scalam.Instrument._
-
 import nz.kiwi.johnson.scalam.Signature.PimpedSignature
+import org.scalatest.Ignore
 
-object Test {
+@Ignore
+class Test {
   def test {
     import velocities._
     import ReturnResult._
@@ -40,8 +41,8 @@ object Test {
     val z = passage(
               adagio, 
               4-/-4,
-    		  inst || AcousticGrandPiano | Xylophone ||,
-    		  q    || A4 quaver          | C4 quaver ||,
+    		  inst || AcousticGrandPiano | -->       ||,
+    		  q    -- A4 quaver          | C4 quaver ||,
     		  q    || C4 quaver          | E4 quaver ||,
     		  q    || E4 quaver          | G4 quaver ||,
     		  q    || A4                 | C4        ||,

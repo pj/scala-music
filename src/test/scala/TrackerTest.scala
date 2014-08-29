@@ -10,9 +10,10 @@ import java.io.FileInputStream
 import nz.kiwi.johnson.scalam.MidiUtils.PimpedMidiDevice
 import nz.kiwi.johnson.scalam.MidiUtils
 import nz.kiwi.johnson.scalam.Passage.passage
-import nz.kiwi.johnson.scalam.Passage.instruments
 import nz.kiwi.johnson.scalam._
+import org.scalatest.Ignore
 
+@Ignore
 class TrackerTest extends FlatSpec with Matchers {  
   "Thing" should "generate stuff" in {
 //    var sequence = test1 | (test2 <> test3) | test1 | (test1 <> test2 <> test3)

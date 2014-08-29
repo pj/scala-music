@@ -1,10 +1,13 @@
 package nz.kiwi.johnson.scalam
 
-trait PassagePart
-
-class Line(val lineStart: Length, val notes: Seq[Note]) extends PassagePart {
+case class Line(val lineStart: Length, val notes: Seq[Note], val barStart: Boolean) extends PassagePart {
+	def replaceNote(note: Note) = {
+	  val newNotes = notes.slice(0, -1)
+	  new Line(lineStart, newNotes :+ note, barStart)
+	}
+	
 	def addNote(note: Note) = {
-	  new Line(lineStart, notes :+ note)
+	  new Line(lineStart, notes :+ note, barStart)
 	}
 }
 
@@ -29,31 +32,36 @@ object pitch_change {
 }
 
 // lengths
-trait Length extends BarResultMethods {
-  // used when starting a line 
+class Length(val longName: String) extends BarResultMethods {
+  // Used when starting a line 
   def ||(note: Note): LineBuilder = {
-    new LineBuilder(new Line(this, Seq(note)))
+    new LineBuilder(new Line(this, Seq(note), false))
   }
+  
+  // start of a new bar
+  def --(note: Note): LineBuilder = {
+    new LineBuilder(new Line(this, Seq(note), true))
+  }
+  
+  override def toString() = longName
 }
 
-object UnknownLength extends Length
-
-object __ extends Length
+object UnknownLength extends Length("unknown")
 
 object lengths {
-  object w extends Length
-  object h extends Length
-  object q extends Length
-  object e extends Length
-  object s extends Length
-  object whole extends Length
-  object half extends Length
-  object quaver extends Length
-  object eighth extends Length
-  object semiquaver extends Length
+  object w extends Length("w")
+  object h extends Length("h")
+  object q extends Length("q")
+  object e extends Length("e")
+  object s extends Length("s")
+  object whole extends Length("whole")
+  object half extends Length("half")
+  object quaver extends Length("quaver")
+  object eighth extends Length("eighth")
+  object semiquaver extends Length("semiquaver")
 }
 
-class DottedLength(val length: Length, val dots: Int) extends Length
+class DottedLength(val length: Length, val dots: Int) extends Length(length.longName)
 
 class Dotted(val dots: Int)
 
@@ -282,51 +290,55 @@ trait CommonMethods {
 class LineBuilder(line: Line) extends CommonMethods {  
   // note methods
   def note(octave: Int, note: Int, length: Length) = {
-    new LineBuilder(line.addNote(new Note(octave, note, length)))
+    new LineBuilder(line.replaceNote(new Note(octave, note, length)))
+  }
+  
+  def noteBar(octave: Int, note: Int, length: Length, bar: BarResult): LineBuilder = {
+    new LineBuilder(line.replaceNote(new Note(octave, note, length)))
   }
   
   // doted
   def dotted(dots: Int) = {
     val note = line.notes.last
-    new LineBuilder(line.addNote(note.withDotted(dots)))
+    new LineBuilder(line.replaceNote(note.withDotted(dots)))
   }
   
   // velocity methods
   def v(newVelocity: Int) = {
     val note = line.notes.last
-    new LineBuilder(line.addNote(note.withVelocity(newVelocity)))
+    new LineBuilder(line.replaceNote(note.withVelocity(newVelocity)))
   }
   
   // velocities - with changes
-  private def v(newVelocity: Int, vc: velocity_change) = {
+  def v(newVelocity: Int, vc: velocity_change) = {
     val note = line.notes.last
-    new LineBuilder(line.addNote(new Note(note.octave, note.note, note.length, newVelocity, Some(vc), note.pitchChange)))
+    new LineBuilder(line.replaceNote(new Note(note.octave, note.note, note.length, newVelocity, Some(vc), note.pitchChange)))
   }
   
   // normal
   def lengthNormal(newLength: Length) = {
     val note = line.notes.last
-    new LineBuilder(line.addNote(note.withLength(newLength)))
+    new LineBuilder(line.replaceNote(note.withLength(newLength)))
   }
   
   def lengthDotted(newLength: Length, dotted: Dotted) = {
     val note = line.notes.last
-    new LineBuilder(line.addNote(note.withLength(newLength).withDotted(dotted)))
+    new LineBuilder(line.replaceNote(note.withLength(newLength).withDotted(dotted)))
   }
   
   def lengthBarResult(newLength: Length, bar: BarResult) = {
     val note = bar.notes.last
-    new LineBuilder(line.addNote(note.withLength(newLength)))
+    new LineBuilder(line.replaceNote(note.withLength(newLength)))
   }
   
   def lengthVelocity(newLength: Length, velocity: Velocity) = {
     val note = line.notes.last
-    new LineBuilder(line.addNote(note.withLength(newLength).withVelocity(velocity)))
+    new LineBuilder(line.replaceNote(note.withLength(newLength).withVelocity(velocity)))
   }
   
   def lengthReturn(newLength: Length, ret: ReturnResult) = {
     val note = line.notes.last
-    line.addNote(note.withLength(newLength))
+    line.replaceNote(note.withLength(newLength))
   }
   
   def ||(): Line = {
@@ -339,7 +351,11 @@ class LineBuilder(line: Line) extends CommonMethods {
 }
 
 class Note(val octave: Int, val note: Int, val length: Length, val velocity: Int = 127, 
-           val velocityChange: Option[velocity_change] = None, val pitchChange: Option[pitch_change] = None)  {
+           val velocityChange: Option[velocity_change] = None, val pitchChange: Option[pitch_change] = None){
+  
+  override def toString() = {
+    s"$note $length $velocity"
+  }
 //            extends CommonMethods {
   
 //  def dotted(dots: Int) = {
